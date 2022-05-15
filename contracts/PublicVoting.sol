@@ -1,13 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import '@openzeppelin/contracts/utils/math/SafeMath.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract PublicVoting is Ownable {
-
-    using SafeMath for uint;
-    using SafeMath for uint8;
+contract PublicVoting {
 
     struct Choice {
         string title ;
@@ -48,6 +43,10 @@ contract PublicVoting is Ownable {
         _;
     }
 
+    modifier onlyParticipant(uint _id) {
+        require(_voterStore[_id].isVoted[msg.sender] == true || _votingInfoStore[_id].creator  == msg.sender , "Not participant in this voting");
+        _;
+    }
 
    function createNewVoting (string[] memory _choices) public {
        Choice[] storage tempChoice = _choiceStore[_runningId];
@@ -98,7 +97,7 @@ contract PublicVoting is Ownable {
        return response;
     }
 
-    function voteResult(uint _id) public onlyEndState(_id) view returns(Choice[] memory){
+    function voteResult(uint _id) public onlyEndState(_id) onlyParticipant(_id) view returns(Choice[] memory){
        return _choiceStore[_id];
     }
 
@@ -110,7 +109,7 @@ contract PublicVoting is Ownable {
        _votingInfoStore[_id].state = State.ENDED;
    }
 
-   function changeCrator(uint _id , address _newCreator) public  onlyCreator(_id){
+   function changeCreator(uint _id , address _newCreator) public  onlyCreator(_id){
        _votingInfoStore[_id].creator = _newCreator;
    }
 
