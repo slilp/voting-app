@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract PublicVoting {
+
+contract PublicVoting is Ownable {
 
     struct Choice {
         string title ;
@@ -17,12 +19,14 @@ contract PublicVoting {
    enum State { WAITING, VOTING, ENDED }
 
    struct VoteInfo {
+       string  title ;
        address creator;
        State state ;
     }
 
 
     uint private _runningId = 0 ;
+    uint8 private _maxChoice = 10;
     mapping(uint => Choice[]) private _choiceStore;
     mapping(uint => Voter) private  _voterStore;
     mapping(uint => VoteInfo) private  _votingInfoStore;
@@ -48,7 +52,8 @@ contract PublicVoting {
         _;
     }
 
-   function createNewVoting (string[] memory _choices) public {
+   function createNewVoting (string[] memory _choices , string memory title) public {
+       require(_choices.length <= _maxChoice , 'Exceed choice');
        Choice[] storage tempChoice = _choiceStore[_runningId];
        for(uint i = 0 ; i < _choices.length ; i++){
            tempChoice.push(Choice({
@@ -58,6 +63,7 @@ contract PublicVoting {
         } 
         _userHistory[msg.sender].push(_runningId);
         _votingInfoStore[_runningId] = VoteInfo({
+           title : title,
            creator : msg.sender ,
            state : State.WAITING
         });
@@ -89,6 +95,14 @@ contract PublicVoting {
        return _userHistory[msg.sender];
     }
 
+    function totalVote(uint _id) public view returns(uint) {
+        uint response = 0 ;
+        for(uint i = 0 ; i < _choiceStore[_id].length ; i++){
+           response += _choiceStore[_id][i].count;
+        }  
+        return response;
+    }
+
     function voteChoices(uint _id) public view returns(string[] memory){
        string[] memory response = new string[](_choiceStore[_id].length) ;
        for(uint i = 0 ; i < _choiceStore[_id].length ; i++){
@@ -109,8 +123,8 @@ contract PublicVoting {
        _votingInfoStore[_id].state = State.ENDED;
    }
 
-   function changeCreator(uint _id , address _newCreator) public  onlyCreator(_id){
-       _votingInfoStore[_id].creator = _newCreator;
+   function editMaxChoice(uint8 _newMax) public onlyOwner {
+      _maxChoice = _newMax;
    }
 
 }
