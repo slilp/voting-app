@@ -5,9 +5,10 @@ const useVoting = () => {
   const { sendTransaction } = useTransaction();
   const votingContract = useVotingContract();
 
-  const createNewVoting = async (votingList) => {
+  const createNewVoting = async (votingList, title) => {
     return await sendTransaction(votingContract, "createNewVoting", [
       votingList,
+      title,
     ]);
   };
 

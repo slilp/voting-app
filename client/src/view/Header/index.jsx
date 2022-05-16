@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Button from "../../component/Button";
 import { useWeb3React } from "@web3-react/core";
@@ -42,17 +43,20 @@ function Header() {
     <div className="p-3">
       <Container>
         <div className="d-flex align-items-center gap-1 justify-content-between">
-          <div>
-            <span>
-              <img
-                alt="voting_logo"
-                src="./voting_logo.png"
-                style={{ height: "75px" }}
-              ></img>
-            </span>
-            <h2 className="fw-bold m-0"> ME </h2>
-            <h2 className="fw-bold m-0"> UP </h2>
-          </div>
+          <Link to="/">
+            <div>
+              <span>
+                <img
+                  alt="voting_logo"
+                  src="/voting_logo.png"
+                  style={{ height: "75px" }}
+                ></img>
+              </span>
+              <h2 className="fw-bold m-0"> ME </h2>
+              <h2 className="fw-bold m-0"> UP </h2>
+            </div>
+          </Link>
+
           <div className="mb-0">
             {active ? (
               <Button

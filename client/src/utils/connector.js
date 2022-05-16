@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { Web3Provider } from "@ethersproject/providers";
 

@@ -3,14 +3,29 @@ import { toast } from "react-toastify";
 const useTransaction = () => {
   const sendTransaction = async (contract, method, args, overrides = null) => {
     try {
-      const tx = await contract[method](...args, { ...overrides });
-      if (tx.hash) {
-        toast.success(`Success : ${tx.hash}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-      }
+      const raw = await contract[method](...args, { ...overrides });
+      if (raw.hash) {
+        const tx = await raw.wait();
 
-      return tx;
+        if (tx.transactionHash) {
+          toast.success(
+            `Success : ${tx.transactionHash.substring(
+              0,
+              12
+            )}...${tx.transactionHash.substring(
+              tx.transactionHash.length - 12,
+              tx.transactionHash.length
+            )}`,
+            {
+              position: toast.POSITION.BOTTOM_RIGHT,
+            }
+          );
+        }
+
+        return tx;
+      } else {
+        return raw;
+      }
     } catch (error) {
       toast.error(`Fail : ${error.message}`, {
         position: toast.POSITION.BOTTOM_RIGHT,

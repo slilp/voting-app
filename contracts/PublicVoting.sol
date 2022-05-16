@@ -24,6 +24,7 @@ contract PublicVoting is Ownable {
        State state ;
     }
 
+    event NewVoting(address creator, uint id);
 
     uint private _runningId = 0 ;
     uint8 private _maxChoice = 10;
@@ -54,6 +55,7 @@ contract PublicVoting is Ownable {
 
    function createNewVoting (string[] memory _choices , string memory title) public {
        require(_choices.length <= _maxChoice , 'Exceed choice');
+        _runningId += 1;
        Choice[] storage tempChoice = _choiceStore[_runningId];
        for(uint i = 0 ; i < _choices.length ; i++){
            tempChoice.push(Choice({
@@ -67,7 +69,7 @@ contract PublicVoting is Ownable {
            creator : msg.sender ,
            state : State.WAITING
         });
-        _runningId += 1;
+        emit NewVoting(msg.sender, _runningId);
     }
 
     function sendVote(uint _id , uint _index) public onlyVotingState(_id) {
