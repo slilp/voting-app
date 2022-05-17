@@ -70,6 +70,7 @@ function NewVote() {
           </Form.Label>
           <Form.Control
             value={title}
+            maxLength={100}
             required
             onChange={(event) => setTitle(event.target.value)}
             placeholder="e.g. Do you like blockchain ?"
@@ -98,6 +99,7 @@ function NewVote() {
                 onChange={(event) =>
                   onChangeChoiceText(index, event.target.value)
                 }
+                maxLength={100}
                 required
                 placeholder="e.g. Yes,No"
                 value={item}

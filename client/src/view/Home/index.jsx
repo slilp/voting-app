@@ -33,14 +33,14 @@ const steps = [
     step: 2,
     title: "Start and Share",
     desc: "Start your voting and share to voters you want.",
-    img: "url('https://www.notion.so/cdn-cgi/image/format=auto,width=1080,quality=100/front-static/pages/product/home-page-hero-refreshed-v3.png')",
+    img: "url('voting_share.PNG')",
   },
   {
     key: "step-three",
     step: 3,
     title: "End and View",
     desc: "End your vote to see the result.",
-    img: "url('https://www.notion.so/cdn-cgi/image/format=auto,width=1080,quality=100/front-static/pages/product/home-page-hero-refreshed-v3.png')",
+    img: "url('voting_end.PNG')",
   },
 ];
 

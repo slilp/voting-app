@@ -41,6 +41,10 @@ function Header() {
 
   return (
     <div className="p-3">
+      <div className="bg-dark text-white mb-2 p-2 text-center">
+        This is just Alpha prototype version. Please do not use in SERIOUS
+        voting situation.
+      </div>
       <Container>
         <div className="d-flex align-items-center gap-1 justify-content-between">
           <Link to="/">

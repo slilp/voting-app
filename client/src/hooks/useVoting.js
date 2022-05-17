@@ -12,23 +12,20 @@ const useVoting = () => {
     ]);
   };
 
-  const sendVote = async (votingList, title) => {
-    return await sendTransaction(votingContract, "sendVote", [
-      votingList,
-      title,
-    ]);
+  const sendVote = async (id, index) => {
+    return await sendTransaction(votingContract, "sendVote", [id, index]);
   };
 
-  const myVote = async (votingList) => {
-    return await sendTransaction(votingContract, "myVote", [votingList]);
+  const myVote = async (id) => {
+    return await sendTransaction(votingContract, "myVote", [id]);
   };
 
-  const isVoted = async (votingList) => {
-    return await sendTransaction(votingContract, "isVoted", [votingList]);
+  const isVoted = async (id) => {
+    return await sendTransaction(votingContract, "isVoted", [id]);
   };
 
-  const votingInfo = async (votingList) => {
-    return await sendTransaction(votingContract, "votingInfo", [votingList]);
+  const votingInfo = async (id) => {
+    return await sendTransaction(votingContract, "votingInfo", [id]);
   };
 
   const voteHistory = async (address) => {
@@ -44,7 +41,13 @@ const useVoting = () => {
   };
 
   const voteResult = async (id) => {
-    return await sendTransaction(votingContract, "voteResult", [id]);
+    return await sendTransaction(
+      votingContract,
+      "voteResult",
+      [id],
+      null,
+      true
+    );
   };
 
   const openVote = async (id) => {
