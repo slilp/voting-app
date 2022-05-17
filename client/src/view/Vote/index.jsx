@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Container } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { BsEmojiDizzy } from "react-icons/bs";
 import Button from "../../component/Button";
 import useVoting from "../../hooks/useVoting";
@@ -63,15 +63,23 @@ function Vote() {
   const [choices, setChoices] = useState([]);
   const [select, setSelect] = useState(null);
   const { active, account } = useWeb3React();
+
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const getInitialData = async () => {
+    let voteInfoResponse;
+    let count = 0;
+    while (true) {
+      if (count > 10) break;
+      voteInfoResponse = await votingInfo(id);
+      if (voteInfoResponse[1] !== "0x0000000000000000000000000000000000000000")
+        break;
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      count++;
+    }
     const voteChoiceResponse = await voteChoices(id);
-    const voteInfoResponse = await votingInfo(id);
-    if (voteInfoResponse[1] === "0x0000000000000000000000000000000000000000")
-      navigate("/");
     const totalVoteResponse = await totalVote(id);
+
     if (voteInfoResponse[2] >= 1) {
       const isVoteResponse = await isVoted(id);
       const myVoteResponse = await myVote(id);
@@ -92,6 +100,11 @@ function Vote() {
   const onClickOpenVote = async () => {
     const response = await openVote(id);
     if (response) {
+      while (true) {
+        const voteInfoResponse = await votingInfo(id);
+        if (voteInfoResponse[2] === 1) break;
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
       setRefresh((prev) => !prev);
     }
   };
@@ -99,6 +112,11 @@ function Vote() {
   const onClickEndVote = async () => {
     const response = await endVote(id);
     if (response) {
+      while (true) {
+        const voteInfoResponse = await votingInfo(id);
+        if (voteInfoResponse[2] === 2) break;
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
       setRefresh((prev) => !prev);
     }
   };
@@ -107,6 +125,11 @@ function Vote() {
     if (select !== null) {
       const response = await sendVote(id, select);
       if (response) {
+        while (true) {
+          const isVoteResponse = await isVoted(id);
+          if (isVoteResponse) break;
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
         setRefresh((prev) => !prev);
       }
     } else {
