@@ -1,7 +1,7 @@
 
 # Voting platform on Polygon network
 
-Live Demo 👉 https://voting-app-orpin.
+Live Demo 👉 https://voting-app-orpin.vercel.app
 
 Voting platform that trustless by using blockchain technology (Polygon network). Admin can create a voting topic and send to other participants for voting. All results will be keeped on smartcontract so everybody can have confidence in the voting result. 
 
